@@ -1,0 +1,83 @@
+// models/search.js
+
+// SearchEngine class for searching closely matched words in a dictionary
+// Match between two words is determined using Levenshtein distance (or cost)
+// The smaller is the distance, the closer is the match
+
+function SearchEngine(dictionary = null) {
+  this.update(dictionary)
+}
+
+SearchEngine.prototype.update = function(dictionary) {
+  this.dictionary = dictionary
+}
+
+SearchEngine.prototype.search = function(word, cost) {
+  let result = {
+    found: false,
+    matches: []
+  }
+  if (!this.dictionary) return result
+  let trie = this.dictionary.trie
+
+  // Maximum Levenshtein cost possible
+  if (!cost) cost = word.length 
+
+  // Use a prefix table to determine the Levenshtein cost for each word
+  // Initialize 1st row:
+  let row = new Array(word.length+1).fill(0).map((v,i)=>i)
+  
+  // Continue the recursive trie search to find all matches
+  for (let letter in trie.children) {
+    this.recursiveSearch(
+        trie.children[letter], letter, word, row, result, cost)
+        if (result.found) break;
+  }
+
+  if (result.found) result.matches = []
+  else result.matches.sort((a,b)=>a[1]-b[1])
+
+  return result
+}
+
+SearchEngine.prototype.recursiveSearch = function(
+    node, letter, word, previousRow, result, cost) {
+  let currentRow = [previousRow[0]+1]
+  let currentCost;
+  for (let i=1; i<=word.length; ++i) {
+    if (word[i-1] === letter) {
+      currentCost = previousRow[i-1]
+    } else {
+      currentCost = Math.min(previousRow[i]+1,
+          currentRow[i-1]+1, previousRow[i-1]+1)
+    }
+    currentRow.push(currentCost)
+  }
+
+  // Check if it's a matching word:
+  if (node.word && currentCost<= cost) {
+    result.matches.push([node.word, currentCost])
+    if (currentCost === 0) result.found = true
+  }
+
+  // Check if some row cells below cost:
+  if (!result.found && Math.min(...currentRow) <= cost) {
+    for (let letter in node.children) {
+      this.recursiveSearch(
+        node.children[letter], letter, word, currentRow, result, cost)
+    }
+  }
+}
+
+SearchEngine.prototype.searchAll = function(text, maxMatches = 3) {
+  let words = text.trim().toLowerCase().split(/\s+/)
+  let results = {}
+  let maxCost = 3
+  for (let word of words) {
+    let result = this.search(word, maxCost)
+    if (!result.found) results[word] = result.matches.slice(0, maxMatches)
+  }
+  return results
+}
+
+module.exports = SearchEngine
