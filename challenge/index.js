@@ -17,8 +17,10 @@ let spellcheckResults = {}
 const process = async function() {
   // Read text files
   let [dictionaryText, storyText] = await readData(dictionaryFile, storyFile)
-  story = storyText.toLocaleLowerCase() // assumes a case-insensitive scenario
-  dictionary.fromText(dictionaryText)
+  story = storyText
+      .replace(/[,.!?]/g,'') // remove punctuation
+      .toLocaleLowerCase() // assume a case-insensitive scenario
+  dictionary.fromText(dictionaryText) // create a new dictionary
 
   // Update search engine and create a list of matches
   searchEngine.update(dictionary)

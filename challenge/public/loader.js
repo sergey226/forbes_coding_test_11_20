@@ -24,11 +24,14 @@ const showStory = async function() {
 
 const showSpellCheck = async function() {
   let results = await loadSpellCheck()
-  let html = '<ul>'
+  let html = '<table><tr>\
+      <th>Original</th>\
+      <th>Suggested</th>\
+      </tr>'
   for (let result in results) {
-    html += `<li>${result} : best match = ${results[result][0]}</li>`
+    html += `<tr><td>${result}</td><td>${results[result][0]}</td></tr>`
   }
-  html += '</ul>'
+  html += '</table>'
   content.innerHTML = html
 }
 
