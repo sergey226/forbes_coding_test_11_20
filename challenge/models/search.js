@@ -75,7 +75,9 @@ SearchEngine.prototype.searchAll = function(text, maxMatches = 3) {
   let maxCost = 3
   for (let word of words) {
     let result = this.search(word, maxCost)
-    if (!result.found) results[word] = result.matches.slice(0, maxMatches)
+    if (!result.found) {
+      results[word] = result.matches.slice(0, maxMatches).map(v=>v[0])
+    }
   }
   return results
 }

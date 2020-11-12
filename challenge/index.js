@@ -14,6 +14,7 @@ const dictionaryFile = 'data/dictionary.txt'
 let dictionary = new Dictionary()
 let searchEngine = new SearchEngine()
 let story = ''
+let spellcheckResults = {}
 
 const readFile = async fileName => {
   let file = null
@@ -33,8 +34,8 @@ readFile(dictionaryFile).then(result => {
   dictionary.fromText(result)
   searchEngine.update(dictionary)
   console.log(`${dictionary.trie.count} words were loaded to the dictionary.`)
-  let res = searchEngine.searchAll(story.slice(0,50))
-  console.log(res)
+  spellcheckResults = searchEngine.searchAll(story, 1)
+  console.log(spellcheckResults)
 })
 
 
@@ -47,7 +48,7 @@ app.get('/api/dictionary', (request, response) => {
 })
 
 app.get('/api/spellcheck', (request, response) => {
-  response.json({})
+  response.json(spellcheckResults)
 })
 
 const PORT = 3000
