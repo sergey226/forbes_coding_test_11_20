@@ -1,4 +1,5 @@
 // models/trie.js
+// Author: Sergey Frolov, 2020
 
 // TrieNode class for use in Dictionary
 

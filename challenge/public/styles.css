@@ -1,11 +1,7 @@
 main, header, footer {
   display: flex;
   justify-content: center;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-table {
-  max-width: 100%;
+  font-family: 'Merriweather', Georgia, serif;
 }
 
 tr:nth-child(odd) {

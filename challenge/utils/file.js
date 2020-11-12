@@ -1,4 +1,5 @@
 // utils/file.js
+// Author: Sergey Frolov, 2020
 
 // Collection of file loading utility functions
 const { promises: fs } = require('fs')

@@ -1,4 +1,5 @@
 // models/search.js
+// Author: Sergey Frolov, 2020
 
 // SearchEngine class for searching closely matched words in a dictionary
 // Match between two words is determined using Levenshtein distance (or cost)
@@ -13,6 +14,10 @@ SearchEngine.prototype.update = function(dictionary) {
 }
 
 SearchEngine.prototype.search = function(word, cost) {
+  // Main search function for calculating Levenshtein distance
+  // and collecting words from the dictionary with distances
+  // smaller or equal than te "cost" argument
+
   let result = {
     found: false,
     matches: []
@@ -42,6 +47,9 @@ SearchEngine.prototype.search = function(word, cost) {
 
 SearchEngine.prototype.recursiveSearch = function(
     node, letter, word, previousRow, result, cost) {
+  // Recursive portion of the search algorithm, which
+  // uses the DFS traversal along the dictionary trie
+
   let currentRow = [previousRow[0]+1]
   let currentCost;
   for (let i=1; i<=word.length; ++i) {
@@ -70,9 +78,12 @@ SearchEngine.prototype.recursiveSearch = function(
 }
 
 SearchEngine.prototype.searchAll = function(text, maxMatches = 3) {
+  // Finds and returns possible matches for misspelled words in a text
+  // maxMatches limits the number of returned matches
+
   let words = text.trim().split(/\s+/)
   let results = {}
-  let maxCost = 3
+  let maxCost = 3   // max Levenshtein distance considered
   for (let word of words) {
     let result = this.search(word, maxCost)
     if (!result.found) {

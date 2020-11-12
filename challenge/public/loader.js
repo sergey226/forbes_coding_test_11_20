@@ -1,5 +1,7 @@
 // public/loader.js
-// utility script for loading results using API
+// Author: Sergey Frolov, 2020
+
+// utility script for loading results using local API
 
 const storyUrl = 'http://localhost:3000/api/story'
 const spellCheckUrl = 'http://localhost:3000/api/spellcheck'

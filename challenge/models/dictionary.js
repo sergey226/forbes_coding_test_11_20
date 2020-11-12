@@ -1,4 +1,5 @@
 // models/dictionary.js module
+// Author: Sergey Frolov, 2020
 
 const Trie = require('../models/trie')
 
