@@ -70,7 +70,7 @@ SearchEngine.prototype.recursiveSearch = function(
 }
 
 SearchEngine.prototype.searchAll = function(text, maxMatches = 3) {
-  let words = text.trim().toLowerCase().split(/\s+/)
+  let words = text.trim().split(/\s+/)
   let results = {}
   let maxCost = 3
   for (let word of words) {

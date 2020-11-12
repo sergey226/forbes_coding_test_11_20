@@ -1,43 +1,33 @@
 const express = require('express')
 const app = express()
-const cors = require('cors')
-const { promises: fs } = require('fs')
+const readData = require('./utils/file')
 const Dictionary = require('./models/dictionary')
 const SearchEngine = require('./models/search')
 
-app.use(cors())
 app.use(express.static('public'))
 
-// Variables and constants:
-const storyFile = 'data/story.txt'
-const dictionaryFile = 'data/dictionary.txt'
+// Variables:
+let storyFile = 'data/story.txt'
+let dictionaryFile = 'data/dictionary.txt'
 let dictionary = new Dictionary()
 let searchEngine = new SearchEngine()
 let story = ''
 let spellcheckResults = {}
 
-const readFile = async fileName => {
-  let file = null
-  try {
-    file = await fs.readFile(fileName, "utf-8")
-  } catch (e) {
-      console.log("File reading error", e)
-  }
-  return file
-}
+const process = async function() {
+  // Read text files
+  let [dictionaryText, storyText] = await readData(dictionaryFile, storyFile)
+  story = storyText.toLocaleLowerCase() // assumes a case-insensitive scenario
+  dictionary.fromText(dictionaryText)
 
-readFile(storyFile).then(result => {
-  story = result
-})
-
-readFile(dictionaryFile).then(result => {
-  dictionary.fromText(result)
+  // Update search engine and create a list of matches
   searchEngine.update(dictionary)
   console.log(`${dictionary.trie.count} words were loaded to the dictionary.`)
   spellcheckResults = searchEngine.searchAll(story, 1)
   console.log(spellcheckResults)
-})
+}
 
+process()
 
 app.get('/api/story', (request, response) => {
   response.send(story)
