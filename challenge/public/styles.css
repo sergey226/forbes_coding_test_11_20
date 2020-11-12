@@ -1,0 +1,23 @@
+main, header, footer {
+  display: flex;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+table {
+  max-width: 100%;
+}
+
+tr:nth-child(odd) {
+  background-color: #eee;
+}
+
+th {
+  background-color: #555;
+  color: #fff;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.5em 1em;
+}
