@@ -4,26 +4,32 @@
  * https://google.github.io/styleguide/jsguide.html.
  */
 
+ // @COMMENT 1. Great job on putting this code together in a short and sweet
+ // form factor! I hope my comments will be helpfull and constructive for an
+ // already pretty good looking piece of code. 
+
 (function () {
 
-  // @COMMENT 1. IIFE usage is ok, but outdated. Constants have a block scope,
+  // @COMMENT 2. IIFE usage is ok, but it may be outdated. I'm not sure why and
+  // in what context it is being used. Constants have a block scope,
   // so the IIFE closure is redundant. Similar scoping can be also achieved for
   // functions by using function expressions inside a block. IIFE is useful
   // for async anonymous functions, but this is not an async function.
 
-  // @COMMENT 2. Consider modularizing the code below into modules, separating
+  // @COMMENT 3. Consider modularizing the code below into modules, separating
   // data API functions from view presentation functions and related variables.
 
   // VARIABLES
-  // @COMMENT 3. Technically, these are constants.
+  // @COMMENT 4. Technically, these are constants.-)
 
-  // @COMMENT 4. Inconsistent usage of naming conventions. Consider renaming
-  // IMAGE_COUNT and PAGINATE_BY constants - e.g. imageCount and paginateBy.
+  // @COMMENT 5. It seems like an inconsistent usage of naming conventions. 
+  // Consider renaming IMAGE_COUNT and PAGINATE_BY constants - 
+  // e.g. imageCount and paginateBy.
 
   const IMAGE_COUNT = 50;
   const PAGINATE_BY = 10;
 
-  // @COMMENT 5. Excellent practice of naming variables and functions: 
+  // @COMMENT 6. Excellent practice of naming variables and functions: 
   // clear, self-descriptive and unambiguous.
 
   const dogBreedsList = document.querySelector('#dogBreedsList');
@@ -37,23 +43,27 @@
 
   // API FUNCTIONS
 
-  // @COMMENT 6. Consider organizing API functions in a separate module -
+  // @COMMENT 7. Consider organizing API functions in a separate module -
   // e.g. a "service" module and export it as needed. It will make the
   // code architecture more flexible and easier to refactor and grow.
   // Dog.ceo has other API calls, which could be added to such a module
-  // without affecting main.js.
+  // without affecting main.js. Things like that are best to be done
+  // from the start, in order to minimize subsequent refactoring.
 
   async function getDogBreeds() {
     // API call to dog.ceo
     // Returns all the possible breeds in a list
 
-    // @COMMENT 7. Hardwiring literals into function call is discouranged.
+    // @COMMENT 8. Hardwiring literals into function calls is potentially
+    // hazardous and generally inconvinient going forward.
     // Consider using a let or a const, e.g. "baseUrl" in fetch(baseUrl).
     // It makes the code more flexible and easier to expand.
 
     let response = await fetch('https://dog.ceo/api/breeds/list/all');
 
-    // @COMMENT 8. Errors are not handled. Consider adding error handlers.
+    // @COMMENT 9. Errors are not handled. Consider adding error handlers.
+    // Some of them can be captured with try/catch blocks, others have to
+    // be handled explicitly.
 
     let breeds = await response.json();
     return Object.keys(breeds.message);
@@ -63,7 +73,8 @@
     // API call to dog.ceo
     // Returns a maximum count images in a list of a specific breed
 
-    // @COMMENT 9. Hardwiring literals into function call is discouranged.
+    // @COMMENT 10. As noted before, I'm not sure if hardwiring literals 
+    // into a function call is a good thing here.
     // Consider using a let, for example: let breedUrl = 
     // `https://dog.ceo/api/breed/${breed}/images/random/${count}`;
     // let response = await fetch(breedUrl);
@@ -73,9 +84,9 @@
     );
     let images = await response.json();
 
-    // @COMMENT 10. Errors are not handled. One particular error is observed
-    // when an empty or non-existent breed is selected. This error may be
-    // handled, for example via:
+    // @COMMENT 11. Errors are not handled here too. One particular error is 
+    // observed when an empty or non-existent breed is selected. This error 
+    // may be handled, for example via:
     //
     // let message = response.ok ? images.message : [];
     // return message;
@@ -87,14 +98,14 @@
 
   // FUNCTIONS
 
-  // @COMMENT 11. Consider organizing some or all of the view presentation 
+  // @COMMENT 12. Consider organizing some or all of the view presentation 
   // functions below in a separate "view" module. It declutters the main 
   // module, makes it more lightweight and easier to read. The view may also
   // be structured as a class.
 
   async function setupDogBreedOptions() {
-    // @COMMENT 12. Inconsistent comment placement inside functions.
-    // Consider moving up the comment below.
+    // @COMMENT 13. Another minor note - an inconsistent comment placement 
+    // inside functions. Consider moving up the comment below.
 
     const breeds = await getDogBreeds();
     // Calls API for list of breeds
@@ -107,7 +118,7 @@
   }
 
   function populateThumbnails(images, start) {
-    // @COMMENT 13. Missing function description here and in
+    // @COMMENT 14. Missing function description here and in
     // functions changeSelectedBreed, onDogBreedSelected and init.
 
     thumbnailContainerElement.innerHTML = '';
@@ -128,7 +139,6 @@
     paginationElement.innerHTML = '';
 
     for (let pageNumber = 0; pageNumber < images.length / 10; pageNumber += 1) {
-      // @COMMENT 14. Columns above exceed the size limit of 80. Probably ok.
 
       // @COMMENT 15. Consider encapsulating the code inside this loop in
       // a separate helper function to make it more readable.
@@ -153,7 +163,7 @@
     populateThumbnails(images, 0);
   }
 
-  // @COMMENT 16. Consider moving functions displayModal and hideModal
+  // @COMMENT 16. Functions displayModal and hideModal seem to belong
   // to "EVENT HANDLERS" section.
 
   function displayModal(image) {
@@ -176,8 +186,8 @@
 
   // INIT
 
-  // @COMMENT 17. Consider renaming the init function, e.g.
-  // initializeView - a bit more descriptive. 
+  // @COMMENT 17. Consider renaming the "init" function, e.g.
+  // "initializeView" - a bit more descriptive. 
 
   function init() {
     setupDogBreedOptions();
@@ -189,6 +199,11 @@
   init();
 })();
 
-// @COMMENT 18. Consider using Cache API for storing responses and
+// @COMMENT 18. In principle, this code can be decoulpled from the HTML
+// document, by creating all needed elements inside JS. Then it will be
+// possible to reuse it elsewhere in more complex scenarios with different
+// HTML layouts and even frameworks. 
+
+// @COMMENT 19. Consider using Cache API for storing responses and
 // making the web page available offline and/or eliminating repetitive
 // API requests.
