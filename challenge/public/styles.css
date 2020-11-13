@@ -4,6 +4,10 @@ main, header, footer {
   font-family: 'Merriweather', Georgia, serif;
 }
 
+header {
+  text-align: center;
+}
+
 tr:nth-child(odd) {
   background-color: #eee;
 }

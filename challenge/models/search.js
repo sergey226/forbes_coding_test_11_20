@@ -1,9 +1,9 @@
 // models/search.js
 // Author: Sergey Frolov, 2020
 
-// SearchEngine class for searching closely matched words in a dictionary
-// Match between two words is determined using Levenshtein distance (or cost)
-// The smaller is the distance, the closer is the match
+// SearchEngine class for searching closely matched words in a dictionary.
+// Match between two words is determined using Levenshtein's distance (or cost).
+// The smaller is the distance, the closer is the match.
 
 function SearchEngine(dictionary = null) {
   this.update(dictionary)
@@ -14,7 +14,7 @@ SearchEngine.prototype.update = function(dictionary) {
 }
 
 SearchEngine.prototype.search = function(word, cost) {
-  // Main search function for calculating Levenshtein distance
+  // Main search function for calculating the Levenshtein distance
   // and collecting words from the dictionary with distances
   // smaller or equal than te "cost" argument
 
@@ -25,7 +25,7 @@ SearchEngine.prototype.search = function(word, cost) {
   if (!this.dictionary) return result
   let trie = this.dictionary.trie
 
-  // Maximum Levenshtein cost possible
+  // Maximum Levenshtein distance/cost possible
   if (!cost) cost = word.length 
 
   // Use a prefix table to determine the Levenshtein cost for each word

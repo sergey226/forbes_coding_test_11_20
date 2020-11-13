@@ -10,14 +10,16 @@ const open = require('open')
 
 app.use(express.static('public'))
 
-// Variables:
+// Variables and constants
 let storyFile = 'data/story.txt'
 let dictionaryFile = 'data/dictionary.txt'
 let dictionary = new Dictionary()
 let searchEngine = new SearchEngine()
 let story = ''
 let spellcheckResults = {}
+const port = 3000
 
+// Primary function
 const processData = async function() {
   // Read text files
   let [dictionaryText, storyText] = await readData(dictionaryFile, storyFile)
@@ -32,8 +34,8 @@ const processData = async function() {
   spellcheckResults = searchEngine.searchAll(story, 1)
   console.log(spellcheckResults)
 
-  // Open a browser window:
-  await open('http://localhost:3000', 'google chrome')
+  // Open a browser window 
+  await open(`http://localhost:${port}`, 'google chrome')
 }
 
 // Set up routes (only one - spellcheck - is required)
@@ -49,9 +51,8 @@ app.get('/api/spellcheck', (request, response) => {
   response.json(spellcheckResults)
 })
 
-const PORT = 3000
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`)
 })
 
 // Make it so:

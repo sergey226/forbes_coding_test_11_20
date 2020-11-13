@@ -1,21 +1,18 @@
 // public/loader.js
 // Author: Sergey Frolov, 2020
 
-// utility script for loading results using local API
+// utility js script for loading results using localhost API
 
-const storyUrl = 'http://localhost:3000/api/story'
-const spellCheckUrl = 'http://localhost:3000/api/spellcheck'
+// Constants
+const baseUrl = 'http://localhost:3000'
+const storyUrl = `${baseUrl}/api/story`
+const spellCheckUrl = `${baseUrl}/api/spellcheck`
 const content = document.querySelector('#content')
 
+// extra functions - not required for the task
 const loadStory = async function() {
   let response = await fetch(storyUrl)
   let story = await response.text()
-  return story
-}
-
-const loadSpellCheck = async function() {
-  let response = await fetch(spellCheckUrl)
-  let story = await response.json()
   return story
 }
 
@@ -24,17 +21,33 @@ const showStory = async function() {
   content.innerHTML = story
 }
 
+// main functions
+const loadSpellCheck = async function() {
+  let response = await fetch(spellCheckUrl)
+  let story = await response.json()
+  return story
+}
+
 const showSpellCheck = async function() {
   let results = await loadSpellCheck()
-  let html = '<table><tr>\
-      <th>Original</th>\
-      <th>Suggested</th>\
-      </tr>'
+  content.innerHTML = `<table><tr>
+      <th>Original</th>
+      <th>Suggested</th>
+      </tr>
+      ${table(results)}
+      </table>`
+}
+
+const table = function(results) {
+  let rows = []
   for (let result in results) {
-    html += `<tr><td>${result}</td><td>${results[result][0]}</td></tr>`
+    rows.push(template(result, results))
   }
-  html += '</table>'
-  content.innerHTML = html
+  return rows.join('');
+}
+
+const template = function(result, results) {
+  return `<tr><td>${result}</td><td>${results[result][0]}</td></tr>`
 }
 
 showSpellCheck()

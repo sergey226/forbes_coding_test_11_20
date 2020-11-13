@@ -6,8 +6,8 @@
 function TrieNode() {
   this.word = null    // word end indicator
   this.children = {}  // branches
-  this.count = 0      // word count
-  this.nodes = 0      // node count
+  this.count = 0      // word count for diagnostics
+  this.nodes = 0      // node count for diagnostics
 }
 
 TrieNode.prototype.insert = function(word) {
